@@ -1,0 +1,5 @@
+{
+  "name": "AI Content Detector VN",
+  "description": "Ứng dụng kiểm tra nội dung văn bản, phát hiện AI, và truy nguyên nguồn gốc bài viết.",
+  "requestFramePermissions": []
+}

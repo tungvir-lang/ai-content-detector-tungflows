@@ -6,3 +6,10 @@ coverage/
 *.log
 .env*
 !.env.example
+# Runtime data (SQLite DB, exports)
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+exports/
+!data/.gitkeep

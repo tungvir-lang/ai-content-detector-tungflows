@@ -1,0 +1,36 @@
+GIẤY PHÉP PHẦN MỀM THƯƠNG MẠI CÓ BẢN QUYỀN
+MeHeal Clinic Bot — Hệ thống quản lý phòng khám sức khỏe tâm thần
+
+Bản quyền © 2026 MeHeal / Tungflows. Bảo lưu mọi quyền.
+(Copyright © 2026 MeHeal / Tungflows. All Rights Reserved.)
+
+------------------------------------------------------------------------
+1. QUYỀN SỞ HỮU
+   Toàn bộ mã nguồn, thiết kế, giao diện, tài liệu và thương hiệu "MeHeal"
+   trong phần mềm này là tài sản độc quyền của nhà cung cấp. Đây là phần mềm
+   THƯƠNG MẠI, KHÔNG phải phần mềm mã nguồn mở.
+
+2. GIẤY PHÉP SỬ DỤNG
+   Phần mềm chỉ được sử dụng khi đã được KÍCH HOẠT bằng KHÓA BẢN QUYỀN
+   (License Key) hợp lệ do nhà cung cấp phát hành cho từng khách hàng.
+   Mỗi khóa gắn với một đơn vị/khách hàng và có thể có thời hạn.
+
+3. GIỚI HẠN
+   Nghiêm cấm: sao chép, phân phối lại, bán lại, cho thuê, dịch ngược,
+   can thiệp cơ chế bản quyền, tự phát sinh khóa bản quyền, hoặc gỡ bỏ
+   thông báo bản quyền — trừ khi có văn bản cho phép của nhà cung cấp.
+
+4. KHÓA HỆ THỐNG
+   Cơ chế khóa bản quyền chỉ do QUẢN TRỊ VIÊN (admin) quản lý. Việc phát
+   hành khóa được thực hiện bằng công cụ nội bộ với mã bí mật (LICENSE_SECRET)
+   mà chỉ nhà cung cấp nắm giữ.
+
+5. DỮ LIỆU & BẢO MẬT
+   Dữ liệu bệnh nhân do khách hàng tự lưu trữ (SQLite cục bộ). Khách hàng
+   chịu trách nhiệm tuân thủ quy định pháp luật về bảo mật thông tin y tế.
+
+6. MIỄN TRỪ TRÁCH NHIỆM
+   Phần mềm cung cấp "nguyên trạng". Tính năng tư vấn AI chỉ mang tính tham
+   khảo, KHÔNG thay thế chẩn đoán và điều trị của bác sỹ chuyên khoa.
+
+Liên hệ cấp phép & hỗ trợ: MeHeal / Tungflows — Hotline: 0523.175.175

@@ -1,5 +1,5 @@
 {
-  "name": "AI Content Detector VN",
-  "description": "Ứng dụng kiểm tra nội dung văn bản, phát hiện AI, và truy nguyên nguồn gốc bài viết.",
+  "name": "MeHeal Clinic Bot",
+  "description": "Hệ thống quản lý phòng khám sức khỏe tâm thần thông minh: đặt lịch, tư vấn AI, quản lý bác sỹ/lịch khám, xuất báo cáo Word/Excel. Bản thương mại có bản quyền.",
   "requestFramePermissions": []
 }

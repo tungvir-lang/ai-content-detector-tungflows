@@ -1,1 +1,107 @@
 @import "tailwindcss";
+
+@theme {
+  --color-brand-50: #fff5ec;
+  --color-brand-100: #ffe6d1;
+  --color-brand-200: #ffc79e;
+  --color-brand-300: #ffa668;
+  --color-brand-400: #ff8c3f;
+  --color-brand-500: #f47c20;
+  --color-brand-600: #e5670f;
+  --color-brand-700: #be4f0d;
+  --color-brand-800: #973f13;
+  --color-brand-900: #7a3513;
+  --font-sans: "Segoe UI", "Inter", system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  margin: 0;
+  background: #fafafa;
+  color: #1f2937;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.brand-gradient {
+  background: linear-gradient(135deg, #ff8c3f 0%, #f47c20 55%, #e5670f 100%);
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #f0e6da;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 0.6rem 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+  font-size: 0.95rem;
+}
+.btn-primary {
+  background: #f47c20;
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #e5670f;
+}
+.btn-ghost {
+  background: #fff;
+  border-color: #e5d9c9;
+  color: #a35012;
+}
+.btn-ghost:hover {
+  background: #fff5ec;
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid #e2d8c8;
+  border-radius: 10px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.95rem;
+  background: #fff;
+  outline: none;
+}
+.input:focus {
+  border-color: #f47c20;
+  box-shadow: 0 0 0 3px rgba(244, 124, 32, 0.15);
+}
+.label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}

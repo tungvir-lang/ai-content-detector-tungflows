@@ -34,8 +34,8 @@ import {
 // Antigravity khởi động server ở cwd tuỳ ý, nên nạp .env theo đường dẫn tuyệt đối
 // của repo. Biến môi trường do client truyền vào luôn được ưu tiên (dotenv không ghi đè).
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-dotenv.config({ path: path.join(repoRoot, ".env.local") });
-dotenv.config({ path: path.join(repoRoot, ".env") });
+dotenv.config({ path: path.join(repoRoot, ".env.local"), quiet: true });
+dotenv.config({ path: path.join(repoRoot, ".env"), quiet: true });
 
 const MAX_TEXT_LENGTH = 20000;
 const MAX_BATCH_ITEMS = 20;

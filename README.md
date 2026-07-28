@@ -34,6 +34,7 @@ trong Google Antigravity (hoặc Claude Code, Cursor, Windsurf, VS Code) gọi t
 
 ```bash
 npm run mcp:smoke    # kiểm tra server (không cần API key)
+npm run mcp:verify   # gọi thật ra Gemini để xác nhận key chạy được
 npm run mcp          # chạy server trên stdio
 npm run mcp:inspect  # mở MCP Inspector để gọi tool thủ công
 ```

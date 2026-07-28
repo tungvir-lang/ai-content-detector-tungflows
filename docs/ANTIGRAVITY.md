@@ -21,16 +21,30 @@ npm run mcp:smoke
 
 Kết quả mong đợi: `OK — tất cả kiểm tra đều đạt.`
 
+Kiểm tra key gọi được thật ra Gemini:
+
+```bash
+npm run mcp:verify
+```
+
+Lệnh này gọi `detect_ai_content` với một đoạn văn mẫu và in điểm AI. Ra được điểm nghĩa là key hợp lệ và MCP server dùng được. Key được che khi in ra màn hình.
+
+**Định dạng key:** API key của Gemini bắt đầu bằng `AIza`. Chuỗi bắt đầu bằng `AQ.` là access token OAuth, không dùng được — Gemini trả lỗi `ACCESS_TOKEN_TYPE_UNSUPPORTED`.
+
 ## 2. Khai báo trong Antigravity
 
-Mở Antigravity → **Settings → MCP Servers → Manage MCP servers → View raw config**. File cấu hình nằm ở:
+Mở Antigravity IDE → panel **MCP Store** (góc phải) → **Manage MCP Servers** → mở `mcp_config.json`. File nằm ở:
 
 | Hệ điều hành | Đường dẫn |
 | --- | --- |
-| macOS / Linux | `~/.antigravity/mcp_config.json` |
-| Windows | `%USERPROFILE%\.antigravity\mcp_config.json` |
+| Windows | `%USERPROFILE%\.gemini\config\mcp_config.json` |
+| macOS / Linux | `~/.gemini/config/mcp_config.json` |
 
-Dán khối sau vào (mẫu có sẵn tại `.antigravity/mcp_config.json` trong repo), thay đường dẫn và API key:
+Antigravity IDE dùng thư mục `.gemini/config/` (không phải `.antigravity/`). Nếu bản anh đang dùng để file ở chỗ khác, cứ mở qua **Manage MCP Servers** rồi để IDE tự dẫn tới đúng file.
+
+Lưu ý: tính năng MCP nằm ở **Antigravity IDE**. App Antigravity thường (màn hình có nút *Install IDE*) chỉ có bảng **MCP Tools** dạng Allow/Deny — đó là danh sách cho phép gọi tool, không phải chỗ khai báo server.
+
+Dán khối sau vào (mẫu có sẵn tại [`docs/mcp_config.example.json`](mcp_config.example.json)), thay đường dẫn và API key:
 
 ```json
 {
@@ -51,7 +65,9 @@ Trên Windows dùng đường dẫn kiểu `C:\\Users\\ten\\ai-content-detector-
 
 Nếu đã điền key trong `.env.local`, có thể bỏ hẳn khối `env` — server tự nạp `.env.local` theo đường dẫn tuyệt đối của repo.
 
-Bấm **Refresh** trong bảng MCP Servers. Server `ai-content-detector-vn` hiện lên kèm 5 tool là đã nối xong.
+Lưu file, mở tab **Manage MCPs** và bấm **Refresh**. Server `ai-content-detector-vn` hiện lên kèm 5 tool là đã nối xong.
+
+Nếu IDE có bảng **MCP Tools** dạng Allow/Deny, thêm `ai-content-detector-vn` vào đó ở chế độ **Allow** để agent được phép gọi.
 
 ## 3. Các tool được phơi ra
 
@@ -79,8 +95,11 @@ Agent sẽ tự đọc file, gọi tool, và trả lại bản sửa.
 | --- | --- |
 | Server không hiện trong danh sách | Kiểm tra JSON có hợp lệ không, đường dẫn tới `mcp/server.ts` có tuyệt đối không, rồi bấm Refresh. |
 | Tool báo `Thiếu GEMINI_API_KEY` | Điền key vào `env` trong `mcp_config.json` hoặc vào `.env.local` của repo. |
+| Lỗi 401 `ACCESS_TOKEN_TYPE_UNSUPPORTED` | Đang dùng access token (tiền tố `AQ.`) thay vì API key. Lấy key `AIza...` tại https://aistudio.google.com/apikey |
 | Muốn xem log giao thức | `npm run mcp:inspect` mở MCP Inspector để gọi tool thủ công. |
 | `npx tsx` chậm lần đầu | Bình thường — lần đầu npx tải `tsx`. Chạy `npm install` trước để có sẵn trong `node_modules`. |
+| `npm error ENOENT ... package.json` | Đang chạy npm ở sai thư mục. `cd` vào thư mục repo rồi chạy lại. |
+| Không tìm thấy `mcp_config.json` | File chỉ xuất hiện sau khi cài **Antigravity IDE**. App Antigravity thường không có file này. |
 
 ## 6. Nối vào client khác
 

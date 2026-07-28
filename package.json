@@ -8,10 +8,14 @@
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "mcp": "tsx mcp/server.ts",
+    "mcp:inspect": "npx -y @modelcontextprotocol/inspector tsx mcp/server.ts",
+    "mcp:smoke": "tsx mcp/smoke-test.ts"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "@tailwindcss/vite": "^4.1.14",
     "@vitejs/plugin-react": "^5.0.4",
     "better-sqlite3": "^12.4.1",

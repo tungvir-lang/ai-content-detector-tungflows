@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "ai-content-detector-vn": {
+      "command": "npx",
+      "args": ["-y", "tsx", "ĐƯỜNG_DẪN_TỚI_REPO/mcp/server.ts"],
+      "cwd": "ĐƯỜNG_DẪN_TỚI_REPO",
+      "env": {
+        "GEMINI_API_KEY": "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY"
+      }
+    }
+  }
+}

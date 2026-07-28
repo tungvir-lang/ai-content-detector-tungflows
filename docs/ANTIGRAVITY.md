@@ -21,6 +21,16 @@ npm run mcp:smoke
 
 Kết quả mong đợi: `OK — tất cả kiểm tra đều đạt.`
 
+Kiểm tra key gọi được thật ra Gemini:
+
+```bash
+npm run mcp:verify
+```
+
+Lệnh này gọi `detect_ai_content` với một đoạn văn mẫu và in điểm AI. Ra được điểm nghĩa là key hợp lệ và MCP server dùng được. Key được che khi in ra màn hình.
+
+**Định dạng key:** API key của Gemini bắt đầu bằng `AIza`. Chuỗi bắt đầu bằng `AQ.` là access token OAuth, không dùng được — Gemini trả lỗi `ACCESS_TOKEN_TYPE_UNSUPPORTED`.
+
 ## 2. Khai báo trong Antigravity
 
 Mở Antigravity IDE → panel **MCP Store** (góc phải) → **Manage MCP Servers** → mở `mcp_config.json`. File nằm ở:
@@ -85,6 +95,7 @@ Agent sẽ tự đọc file, gọi tool, và trả lại bản sửa.
 | --- | --- |
 | Server không hiện trong danh sách | Kiểm tra JSON có hợp lệ không, đường dẫn tới `mcp/server.ts` có tuyệt đối không, rồi bấm Refresh. |
 | Tool báo `Thiếu GEMINI_API_KEY` | Điền key vào `env` trong `mcp_config.json` hoặc vào `.env.local` của repo. |
+| Lỗi 401 `ACCESS_TOKEN_TYPE_UNSUPPORTED` | Đang dùng access token (tiền tố `AQ.`) thay vì API key. Lấy key `AIza...` tại https://aistudio.google.com/apikey |
 | Muốn xem log giao thức | `npm run mcp:inspect` mở MCP Inspector để gọi tool thủ công. |
 | `npx tsx` chậm lần đầu | Bình thường — lần đầu npx tải `tsx`. Chạy `npm install` trước để có sẵn trong `node_modules`. |
 | `npm error ENOENT ... package.json` | Đang chạy npm ở sai thư mục. `cd` vào thư mục repo rồi chạy lại. |

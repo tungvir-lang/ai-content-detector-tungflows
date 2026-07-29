@@ -1,6 +1,6 @@
 # Kết nối vào Google Antigravity
 
-Repo này phơi các khả năng phân tích nội dung ra ngoài dưới dạng **MCP server**. Antigravity nối vào server đó và agent trong Antigravity gọi được 5 tool AI như tool nội bộ của nó.
+Repo này phơi các khả năng phân tích nội dung ra ngoài dưới dạng **MCP server**. Antigravity nối vào server đó và agent trong Antigravity gọi được 6 tool AI như tool nội bộ của nó.
 
 Cùng một server này chạy được với mọi MCP client khác (Claude Code, Cursor, Windsurf, VS Code) — chỉ khác chỗ đặt file cấu hình.
 
@@ -82,7 +82,7 @@ Trên Windows dùng đường dẫn kiểu `C:\\Users\\ten\\ai-content-detector-
 
 Nếu đã điền key trong `.env.local`, có thể bỏ hẳn khối `env` — server tự nạp `.env.local` theo đường dẫn tuyệt đối của repo.
 
-Lưu file, mở tab **Manage MCPs** và bấm **Refresh**. Server `ai-content-detector-vn` hiện lên kèm 5 tool là đã nối xong.
+Lưu file, mở tab **Manage MCPs** và bấm **Refresh**. Server `ai-content-detector-vn` hiện lên kèm 6 tool là đã nối xong.
 
 Nếu IDE có bảng **MCP Tools** dạng Allow/Deny, thêm `ai-content-detector-vn` vào đó ở chế độ **Allow** để agent được phép gọi.
 
@@ -91,12 +91,15 @@ Nếu IDE có bảng **MCP Tools** dạng Allow/Deny, thêm `ai-content-detector
 | Tool | Việc nó làm | Tham số |
 | --- | --- | --- |
 | `detect_ai_content` | Chấm điểm AI 0-100, lý giải, bóc tách từng câu | `text` (bắt buộc), `model` |
+| `detect_from_url` | Tải bài từ link, bóc nội dung rồi chấm điểm — khỏi copy | `url` (bắt buộc), `trace`, `model` |
 | `trace_content_source` | Truy nguyên nguồn gốc qua Google Search, cảnh báo tin sai lệch | `text` (bắt buộc), `model` |
 | `analyze_writing_style` | Báo cáo văn phong: giọng, độ dễ đọc, cụm sáo rỗng cần sửa | `text` (bắt buộc), `model` |
 | `humanize_text` | Viết lại tự nhiên, giữ nguyên tuyệt đối dữ kiện | `text` (bắt buộc), `tone`, `model` |
 | `batch_detect_ai` | Chấm nhiều bài một lượt (tối đa 20), kèm điểm trung bình | `texts` (bắt buộc), `model` |
 
-Giới hạn: mỗi văn bản tối đa 20.000 ký tự. Tham số `model` mặc định là `gemini-2.5-flash`.
+Giới hạn: mỗi văn bản tối đa 20.000 ký tự. Tham số `model` mặc định là `gemini-2.5-flash`, đổi được bằng biến môi trường `GEMINI_MODEL`.
+
+**Riêng `detect_from_url`:** chỉ nhận `http`/`https`, tải tối đa 2 MB, quá 20 giây thì dừng, đi theo tối đa 5 lần chuyển hướng. Địa chỉ nội bộ (localhost, 10.x, 192.168.x, 169.254.x…) bị từ chối, kiểm tra ở từng chặng chuyển hướng — vì agent gọi tool này thường đang đọc nội dung do người ngoài viết, và một trang web có thể chèn chỉ dẫn ẩn để trỏ tool vào máy chủ trong mạng nội bộ. Trang dựng hoàn toàn bằng JavaScript sẽ bóc ra rất ít chữ; gặp trường hợp đó thì sao chép nội dung rồi dùng `detect_ai_content`.
 
 ## 4. Dùng thử trong Antigravity
 

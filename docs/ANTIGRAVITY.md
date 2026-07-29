@@ -4,6 +4,23 @@ Repo này phơi các khả năng phân tích nội dung ra ngoài dưới dạng
 
 Cùng một server này chạy được với mọi MCP client khác (Claude Code, Cursor, Windsurf, VS Code) — chỉ khác chỗ đặt file cấu hình.
 
+## 0. Cài nhanh trên Windows (khuyên dùng)
+
+Nếu anh đang cài trên một máy Windows mới, script này làm hết mục 1 và 2 bên dưới. Mở PowerShell:
+
+```powershell
+git clone https://github.com/tungvir-lang/ai-content-detector-tungflows.git $HOME\ai-content-detector-tungflows
+powershell -ExecutionPolicy Bypass -File $HOME\ai-content-detector-tungflows\scripts\setup-windows.ps1
+```
+
+Script tự kiểm tra Node/Git, cài dependencies, hỏi API key (không hiện lên màn hình khi gõ), ghép cấu hình vào `mcp_config.json` mà **không xoá các server MCP khác**, rồi gọi thật ra Gemini để xác nhận. Chạy lại nhiều lần được.
+
+Đặt mã nguồn ở chỗ khác: thêm `-InstallDir D:\code\detector`.
+
+Việc duy nhất phải làm tay sau đó: mở Antigravity IDE → **Manage MCP Servers** → **Refresh**.
+
+Muốn hiểu từng bước hoặc đang dùng macOS/Linux thì đọc tiếp bên dưới.
+
 ## 1. Chuẩn bị
 
 ```bash

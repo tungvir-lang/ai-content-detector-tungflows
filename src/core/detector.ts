@@ -43,6 +43,15 @@ function envApiKey(): string | undefined {
   }
 }
 
+/** Cho phép đổi model bằng biến môi trường, không phải sửa mã. */
+function envModel(): string | undefined {
+  try {
+    return process.env.GEMINI_MODEL;
+  } catch {
+    return undefined;
+  }
+}
+
 function resolveApiKey(explicit?: string): string {
   const key = explicit || envApiKey();
   if (!key) {
@@ -57,20 +66,77 @@ function client(options: CoreOptions = {}) {
   return new GoogleGenAI({ apiKey: resolveApiKey(options.apiKey) });
 }
 
-/** Gemini hay bọc JSON trong ```json ... ```; bóc ra rồi parse. */
-function parseJson<T>(raw: string): T {
+/**
+ * Cắt ra khối JSON cân bằng ngoặc ĐẦU TIÊN trong chuỗi.
+ *
+ * Cách cũ (từ ngoặc mở đầu tiên tới ngoặc đóng cuối cùng) hỏng khi mô hình viết
+ * thêm chữ có chứa ngoặc phía sau JSON, hoặc trả về hai khối JSON liền nhau.
+ * Hàm này đếm độ sâu ngoặc và bỏ qua ngoặc nằm trong chuỗi ký tự.
+ */
+export function extractFirstJsonBlock(text: string): string | null {
+  const start = text.search(/[[{]/);
+  if (start === -1) return null;
+
+  const open = text[start];
+  const close = open === "{" ? "}" : "]";
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+
+  for (let i = start; i < text.length; i++) {
+    const ch = text[i];
+
+    if (escaped) {
+      escaped = false;
+      continue;
+    }
+    if (inString && ch === "\\") {
+      escaped = true;
+      continue;
+    }
+    if (ch === '"') {
+      inString = !inString;
+      continue;
+    }
+    if (inString) continue;
+
+    if (ch === open) {
+      depth++;
+    } else if (ch === close) {
+      depth--;
+      if (depth === 0) return text.slice(start, i + 1);
+    }
+  }
+
+  return null; // ngoặc không đóng — JSON bị cắt cụt
+}
+
+/**
+ * Gemini hay bọc JSON trong ```json ... ```, và thỉnh thoảng viết thêm vài câu
+ * giải thích sau khối JSON dù prompt đã cấm. Hàm này chịu được cả hai.
+ */
+export function parseJson<T>(raw: string): T {
   const clean = raw.replace(/```json|```/g, "").trim();
+
   try {
     return JSON.parse(clean) as T;
   } catch {
-    // Fallback: lấy khối JSON đầu tiên nằm trong chuỗi trả về.
-    const start = clean.search(/[[{]/);
-    const end = Math.max(clean.lastIndexOf("}"), clean.lastIndexOf("]"));
-    if (start === -1 || end === -1 || end <= start) {
-      throw new Error(`Không parse được JSON từ mô hình: ${clean.slice(0, 300)}`);
-    }
-    return JSON.parse(clean.slice(start, end + 1)) as T;
+    // Rơi xuống bước cắt khối JSON bên dưới.
   }
+
+  const block = extractFirstJsonBlock(clean);
+  if (block) {
+    try {
+      return JSON.parse(block) as T;
+    } catch {
+      // Rơi xuống lỗi bên dưới.
+    }
+  }
+
+  throw new Error(
+    `Không parse được JSON từ mô hình (${clean.length} ký tự). ` +
+      `Đoạn đầu: ${clean.slice(0, 300)}`
+  );
 }
 
 function extractSources(response: any): Source[] {
@@ -95,7 +161,7 @@ async function generate(
   options: CoreOptions & { grounded?: boolean }
 ): Promise<{ text: string; sources: Source[] }> {
   const response = await client(options).models.generateContent({
-    model: options.model || DEFAULT_MODEL,
+    model: options.model || envModel() || DEFAULT_MODEL,
     contents: [{ role: "user", parts: [{ text: prompt }] }],
     config: options.grounded ? { tools: [{ googleSearch: {} }] } : {},
   });

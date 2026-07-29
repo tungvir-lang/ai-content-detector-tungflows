@@ -52,7 +52,10 @@ function Invoke-Native {
   $previous = $ErrorActionPreference
   $ErrorActionPreference = 'Continue'
   try {
-    & $File @Arguments
+    # Gộp stderr vào stdout rồi in bằng Write-Host. Không có bước này, thông báo lỗi
+    # của npm và của mcp:verify đi vào error stream và không hiện ra màn hình —
+    # người dùng chỉ thấy "thất bại" mà không biết vì sao.
+    & $File @Arguments 2>&1 | ForEach-Object { Write-Host $_ }
     $code = $LASTEXITCODE
   } finally {
     $ErrorActionPreference = $previous
@@ -228,7 +231,10 @@ $serverEntry = [PSCustomObject]@{
   cwd     = $InstallDir
 }
 
-$otherServers = @($config.mcpServers.PSObject.Properties.Name | Where-Object { $_ -ne $ServerName })
+# Điều kiện "$_" lọc bỏ chuỗi rỗng và $null. Khi mcpServers chưa có mục nào,
+# phép truy cập .Properties.Name trả về $null, và @($null) đếm ra 1 phần tử —
+# đủ để báo nhầm "giữ nguyên 1 server khác" trên một cấu hình hoàn toàn trống.
+$otherServers = @($config.mcpServers.PSObject.Properties.Name | Where-Object { $_ -and $_ -ne $ServerName })
 
 if ($config.mcpServers.PSObject.Properties[$ServerName]) {
   $config.mcpServers.$ServerName = $serverEntry

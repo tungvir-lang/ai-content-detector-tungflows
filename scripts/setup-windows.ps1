@@ -100,10 +100,19 @@ if ($nodeMajor -gt 0 -and $nodeMajor -lt 18) {
 Write-Step '2/5 Tải mã nguồn'
 
 if (Test-Path (Join-Path $InstallDir '.git')) {
-  Write-Host "  Đã có sẵn, đang cập nhật: $InstallDir"
-  Invoke-Native git @('-C', $InstallDir, 'fetch', 'origin', 'main') 'git fetch thất bại. Kiểm tra kết nối mạng.'
-  Invoke-Native git @('-C', $InstallDir, 'checkout', 'main') 'git checkout main thất bại. Có thể do thay đổi cục bộ chưa commit.'
-  Invoke-Native git @('-C', $InstallDir, 'pull', 'origin', 'main') 'git pull thất bại. Có thể do thay đổi cục bộ chưa commit.'
+  Write-Host "  Đã có sẵn: $InstallDir"
+
+  $branch = (& git -C $InstallDir rev-parse --abbrev-ref HEAD 2>$null)
+  if ($branch) { $branch = $branch.Trim() }
+
+  if ($branch -eq 'main') {
+    Write-Host '  Đang cập nhật nhánh main...'
+    Invoke-Native git @('-C', $InstallDir, 'pull', 'origin', 'main') 'git pull thất bại. Có thể do thay đổi cục bộ chưa commit.'
+  } else {
+    # Không tự chuyển nhánh: người dùng có thể đang cố tình thử một nhánh chưa merge.
+    Write-Warn "Đang ở nhánh '$branch', không phải 'main'. Script giữ nguyên nhánh này và bỏ qua bước cập nhật."
+    Write-Warn "Muốn dùng bản chính thức: chạy 'git checkout main' rồi chạy lại script."
+  }
 } elseif (Test-Path $InstallDir) {
   throw "Thư mục '$InstallDir' đã tồn tại nhưng không phải repo git. Xoá nó hoặc dùng -InstallDir để chọn chỗ khác."
 } else {

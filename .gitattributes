@@ -1,0 +1,2 @@
+# Script PowerShell chạy trên Windows — giữ CRLF khi checkout.
+*.ps1 text eol=crlf

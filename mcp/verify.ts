@@ -37,7 +37,10 @@ async function main() {
         "Tạo file .env.local trong thư mục repo với đúng một dòng:\n" +
         "  GEMINI_API_KEY=<key của bạn>\n"
     );
-    process.exit(1);
+    // Đặt mã thoát thay vì process.exit(): trên Windows, exit() lúc các handle
+    // đang đóng dở làm libuv báo "Assertion failed: !(handle->flags & UV_HANDLE_CLOSING)".
+    process.exitCode = 1;
+    return;
   }
 
   console.log("\nĐang gọi detect_ai_content với một đoạn văn mẫu...\n");
@@ -69,7 +72,13 @@ main().catch((error) => {
     );
   } else if (/quota|RESOURCE_EXHAUSTED|429/i.test(message)) {
     console.error("Hết hạn mức. Đợi ít phút rồi thử lại, hoặc kiểm tra quota trong AI Studio.\n");
+  } else if (/parse được JSON|JSON at position/i.test(message)) {
+    console.error(
+      "Mô hình trả về JSON không hợp lệ. Đây là lỗi ngẫu nhiên — chạy lại thường là được.\n" +
+        "Nếu lặp lại nhiều lần, thử đổi model: GEMINI_MODEL=gemini-2.5-pro npm run mcp:verify\n"
+    );
   }
 
-  process.exit(1);
+  // Không dùng process.exit(): xem ghi chú về libuv ở trên.
+  process.exitCode = 1;
 });

@@ -42,26 +42,34 @@ function Write-Warn { param([string]$Text) Write-Host "  [!]  $Text" -Foreground
 # Gọi chương trình ngoài (git, npm) và chỉ dựa vào mã thoát để biết thành/bại.
 # Cần thiết vì npm và MCP server đều ghi log ra stderr; với ErrorActionPreference='Stop'
 # PowerShell có thể coi stderr là lỗi nghiêm trọng và dừng script dù lệnh chạy đúng.
+#
+# Mã thoát của lần gọi gần nhất được để ở biến script này, KHÔNG trả qua giá trị
+# trả về của hàm. Hàm PowerShell trả về mọi thứ nó ghi ra pipeline, nên
+# "$code = Invoke-Native ..." sẽ nhận cả mảng output lẫn mã thoát, và phép so sánh
+# mảng đó với 0 cho kết quả sai.
+#
+$script:LastNativeExitCode = 0
+
 function Invoke-Native {
   param(
     [string]$File,
     [string[]]$Arguments,
     [string]$FailMessage,
-    [switch]$PassThruExitCode
+    # Không ném lỗi khi thất bại; người gọi tự xử lý qua $script:LastNativeExitCode.
+    [switch]$AllowFailure
   )
   $previous = $ErrorActionPreference
   $ErrorActionPreference = 'Continue'
   try {
-    # Gộp stderr vào stdout rồi in bằng Write-Host. Không có bước này, thông báo lỗi
-    # của npm và của mcp:verify đi vào error stream và không hiện ra màn hình —
-    # người dùng chỉ thấy "thất bại" mà không biết vì sao.
+    # Gộp stderr vào stdout rồi in bằng Write-Host. Write-Host ghi thẳng ra màn hình
+    # nên output không lọt vào giá trị trả về của hàm, đồng thời thông báo lỗi của
+    # npm và mcp:verify không bị nuốt mất trong error stream.
     & $File @Arguments 2>&1 | ForEach-Object { Write-Host $_ }
-    $code = $LASTEXITCODE
+    $script:LastNativeExitCode = $LASTEXITCODE
   } finally {
     $ErrorActionPreference = $previous
   }
-  if ($PassThruExitCode) { return $code }
-  if ($code -ne 0) { throw $FailMessage }
+  if (-not $AllowFailure -and $script:LastNativeExitCode -ne 0) { throw $FailMessage }
 }
 
 function Test-Tool {
@@ -263,8 +271,8 @@ try {
   } else {
     Write-Host ''
     Write-Host '  Gọi thật ra Gemini để xác nhận key...'
-    $verifyCode = Invoke-Native npm @('run', '--silent', 'mcp:verify') '' -PassThruExitCode
-    if ($verifyCode -ne 0) {
+    Invoke-Native npm @('run', '--silent', 'mcp:verify') '' -AllowFailure
+    if ($script:LastNativeExitCode -ne 0) {
       Write-Warn 'Key chưa dùng được. Xem hướng dẫn sửa ngay bên trên, rồi chạy lại script này.'
       exit 1  # khối finally bên dưới vẫn chạy và trả lại thư mục cũ
     }

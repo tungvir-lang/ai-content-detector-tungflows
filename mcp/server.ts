@@ -3,7 +3,7 @@
  * MCP server cho AI Content Detector VN.
  *
  * Đây là "cổng kết nối": Google Antigravity (và mọi MCP client khác — Claude Code,
- * Cursor, Windsurf, VS Code) nối vào server này qua stdio và gọi được 5 tool AI
+ * Cursor, Windsurf, VS Code) nối vào server này qua stdio và gọi được 6 tool AI
  * bên dưới như tool nội bộ của agent.
  *
  * Chạy thử:  npm run mcp
@@ -30,6 +30,7 @@ import {
   traceContentSource,
   DEFAULT_MODEL,
 } from "../src/core/detector.js";
+import { fetchArticle } from "./fetch-article.js";
 
 // Antigravity khởi động server ở cwd tuỳ ý, nên nạp .env theo đường dẫn tuyệt đối
 // của repo. Biến môi trường do client truyền vào luôn được ưu tiên (dotenv không ghi đè).
@@ -58,6 +59,27 @@ const TOOLS: Tool[] = [
         },
       },
       required: ["text"],
+    },
+  },
+  {
+    name: "detect_from_url",
+    description:
+      "Tải bài viết từ URL, bóc nội dung rồi chấm điểm AI — không cần sao chép nội dung vào. Dùng khi có sẵn link bài báo. Đặt trace=true để truy nguyên nguồn gốc luôn trong một lần gọi.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        url: {
+          type: "string",
+          description: "Địa chỉ bài viết, phải là http hoặc https.",
+        },
+        trace: {
+          type: "boolean",
+          description:
+            "true thì chạy thêm truy nguyên nguồn gốc bằng Google Search. Mặc định false vì tốn thêm thời gian.",
+        },
+        model: { type: "string", description: "Model Gemini (tuỳ chọn)." },
+      },
+      required: ["url"],
     },
   },
   {
@@ -147,6 +169,36 @@ async function dispatch(name: string, args: Record<string, unknown>) {
     case "detect_ai_content": {
       const { result, sources } = await detectAiContent(requireText(args), { model });
       return json({ ...result, sources });
+    }
+
+    case "detect_from_url": {
+      const url = args?.url;
+      if (typeof url !== "string" || !url.trim()) {
+        throw new Error('Tham số "url" là bắt buộc và phải là chuỗi không rỗng.');
+      }
+
+      const article = await fetchArticle(url.trim());
+      const { result, sources } = await detectAiContent(article.text, { model });
+
+      const payload: Record<string, unknown> = {
+        url: article.finalUrl,
+        title: article.title,
+        textLength: article.text.length,
+        truncated: article.truncated,
+        excerpt: article.text.slice(0, 400),
+        ...result,
+        sources,
+      };
+
+      if (article.finalUrl !== article.requestedUrl) {
+        payload.redirectedFrom = article.requestedUrl;
+      }
+
+      if (args?.trace === true) {
+        payload.trace = await traceContentSource(article.text.slice(0, 4000), { model });
+      }
+
+      return json(payload);
     }
 
     case "trace_content_source":

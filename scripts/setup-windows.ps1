@@ -290,5 +290,5 @@ Write-Host '  1. Mở Antigravity IDE'
 Write-Host '  2. Vào panel MCP Store (bên phải) -> Manage MCP Servers'
 Write-Host '  3. Bấm Refresh'
 Write-Host ''
-Write-Host "  Server '$ServerName' sẽ hiện lên kèm 5 tool." -ForegroundColor Cyan
+Write-Host "  Server '$ServerName' sẽ hiện lên kèm 6 tool." -ForegroundColor Cyan
 Write-Host ''

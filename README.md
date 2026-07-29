@@ -21,12 +21,13 @@ View your app in AI Studio: https://ai.studio/apps/d19d39d9-cc6e-4166-9a2e-7abea
 
 ## Dùng như bộ tool AI trong Antigravity
 
-Ngoài giao diện web, repo còn có một **MCP server** phơi 5 tool phân tích ra ngoài để agent
+Ngoài giao diện web, repo còn có một **MCP server** phơi 6 tool phân tích ra ngoài để agent
 trong Google Antigravity (hoặc Claude Code, Cursor, Windsurf, VS Code) gọi trực tiếp:
 
 | Tool | Việc nó làm |
 | --- | --- |
 | `detect_ai_content` | Chấm điểm AI 0-100 kèm lý giải và bóc tách từng câu |
+| `detect_from_url` | Tải bài từ link, bóc nội dung rồi chấm điểm — khỏi copy nội dung vào |
 | `trace_content_source` | Truy nguyên nguồn gốc nội dung qua Google Search grounding |
 | `analyze_writing_style` | Báo cáo văn phong tiếng Việt, chỉ ra cụm sáo rỗng cần sửa |
 | `humanize_text` | Viết lại tự nhiên, giữ nguyên tuyệt đối dữ kiện |

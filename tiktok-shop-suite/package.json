@@ -1,0 +1,26 @@
+{
+  "name": "tiktok-shop-automation-suite",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Automation suite for TikTok Shop sellers: affiliate promotion, ads automation, analytics dashboard, and content scheduling — built on official TikTok APIs.",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "lint": "tsc --build",
+    "build": "tsc --build && npm run build --workspace @tts/dashboard",
+    "clean": "tsc --build --clean && rm -rf packages/dashboard/dist",
+    "server": "tsx packages/server/src/index.ts",
+    "worker": "tsx packages/server/src/worker.ts",
+    "dashboard:dev": "npm run dev --workspace @tts/dashboard",
+    "smoke": "tsx packages/core/src/smoke.ts"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.14.0",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2"
+  }
+}

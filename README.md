@@ -41,3 +41,9 @@ npm run mcp:inspect  # mở MCP Inspector để gọi tool thủ công
 ```
 
 Hướng dẫn khai báo đầy đủ: [docs/ANTIGRAVITY.md](docs/ANTIGRAVITY.md)
+
+## Xưởng làm video (OpenMontage)
+
+Script `scripts/setup-openmontage-windows.ps1` cài [OpenMontage](https://github.com/calesthio/OpenMontage)
+lên máy Windows: anh mô tả video bằng lời, agent AI viết kịch bản, lồng tiếng tiếng Việt, dựng hình
+và xuất MP4. Hướng dẫn và prompt mẫu: [docs/OPENMONTAGE.md](docs/OPENMONTAGE.md)

@@ -20,7 +20,9 @@ Kèm theo là một **MCP server** để agent bên ngoài gọi được các t
 | `mcp/smoke-test.ts` | Kiểm tra giao thức MCP, không cần API key. |
 | `mcp/verify.ts` | Gọi thật ra Gemini để xác nhận API key. |
 | `scripts/setup-windows.ps1` | Cài đặt một lệnh trên Windows. |
+| `scripts/setup-openmontage-windows.ps1` | Cài xưởng video OpenMontage (repo ngoài, không vendor vào đây) trên Windows. |
 | `docs/ANTIGRAVITY.md` | Cách nối repo này vào Antigravity. |
+| `docs/OPENMONTAGE.md` | Cách cài và dùng xưởng video OpenMontage. |
 
 ## Quy tắc bắt buộc
 
